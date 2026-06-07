@@ -174,12 +174,15 @@
 
 <body>
 
-  <div id="loginBox" class="login">
-    <h1>Вход в чат</h1>
-    <input id="passwordInput" type="password" placeholder="Введите пароль" />
-    <button onclick="login()">Войти</button>
-    <div id="loginError" class="error"></div>
-  </div>
+ <div id="loginBox" class="login">
+  <h1>Вход в чат</h1>
+
+  <input id="nameInput" type="text" placeholder="Введите имя" />
+  <input id="passwordInput" type="password" placeholder="Введите пароль" />
+
+  <button onclick="login()">Войти</button>
+  <div id="loginError" class="error"></div>
+</div>
 
   <div id="chatBox" class="chat">
     <div class="header">
@@ -204,6 +207,7 @@
     const loginBox = document.getElementById("loginBox");
     const chatBox = document.getElementById("chatBox");
     const passwordInput = document.getElementById("passwordInput");
+    const nameInput = document.getElementById("nameInput");
     const loginError = document.getElementById("loginError");
 
     const input = document.getElementById("input");
@@ -222,18 +226,48 @@
       passwordInput.focus();
     }
 
-    function login() {
-      const password = passwordInput.value.trim();
-    
-      if (!password) {
-        loginError.textContent = "Введите пароль";
-        return;
-      }
-    
-      localStorage.setItem("bot_auth", "yes");
-      localStorage.setItem("bot_password", password);
-      showChat();
+   async function login() {
+  const name = nameInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!name || !password) {
+    loginError.textContent = "Введите имя и пароль";
+    return;
+  }
+
+  loginError.textContent = "Проверка доступа...";
+
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        type: "login",
+        name: name,
+        password: password
+      })
+    });
+
+    const answer = await response.text();
+
+    if (!response.ok || answer !== "OK") {
+      loginError.textContent = "Доступ запрещён";
+      return;
     }
+
+    localStorage.setItem("bot_auth", "yes");
+    localStorage.setItem("bot_name", name);
+    localStorage.setItem("bot_password", password);
+
+    loginError.textContent = "";
+    showChat();
+
+  } catch (error) {
+    loginError.textContent = "Ошибка соединения с Сервисом";
+  }
+}
 
     function logout() {
       localStorage.removeItem("bot_auth");
@@ -290,10 +324,12 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            message: text,
-            password: password
-          })
+         body: JSON.stringify({
+          type: "message",
+          name: localStorage.getItem("bot_name"),
+          message: text,
+          password: password
+        })
         });
 
         const answer = await response.text();
