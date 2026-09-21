@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Мой чат-бот</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
+      height: 100vh;
       font-family: Arial, sans-serif;
       background: #0f172a;
       color: #e5e7eb;
-      height: 100vh;
+
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    .login, .chat {
+    /* ===== ВХОД ===== */
+
+    .login {
       width: 100%;
-      max-width: 720px;
+      max-width: 420px;
+      padding: 24px;
+
       background: #111827;
       border: 1px solid #334155;
       border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .login {
-      padding: 24px;
-      max-width: 420px;
     }
 
     .login h1 {
@@ -41,12 +43,15 @@
     .login input {
       width: 100%;
       padding: 14px;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      background: #0f172a;
-      color: #e5e7eb;
-      font-size: 16px;
       margin-bottom: 12px;
+
+      border: 1px solid #334155;
+      border-radius: 10px;
+
+      background: #0f172a;
+      color: white;
+
+      font-size: 16px;
     }
 
     .login button {
@@ -55,39 +60,106 @@
     }
 
     .error {
-      color: #f87171;
-      margin-top: 12px;
       min-height: 20px;
+      margin-top: 12px;
+      color: #f87171;
     }
+
+    /* ===== ЧАТ ===== */
 
     .chat {
+      width: 100%;
+      max-width: 720px;
       height: 90vh;
+
       display: none;
       flex-direction: column;
+
+      background: #111827;
+
+      border: 1px solid #334155;
+      border-radius: 16px;
+
+      overflow: hidden;
     }
 
+    /* ===== HEADER ===== */
+
     .header {
-      padding: 16px;
+      padding: 14px 16px;
+
       background: #020617;
       border-bottom: 1px solid #334155;
-      font-size: 18px;
-      font-weight: bold;
+
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      font-size: 18px;
+      font-weight: bold;
     }
 
     .logout {
-      background: #334155;
-      color: #e5e7eb;
       padding: 8px 12px;
+
+      background: #334155;
+      color: white;
+
       font-size: 14px;
     }
 
+    /* ===== РЕЖИМ ===== */
+
+    .mode-bar {
+      padding: 10px 12px;
+
+      background: #111827;
+      border-bottom: 1px solid #334155;
+    }
+
+    .mode-status {
+      margin-bottom: 8px;
+
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    .mode-status strong {
+      color: white;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mode-button {
+      flex: 1;
+
+      padding: 10px;
+
+      background: #1e293b;
+      color: #cbd5e1;
+
+      border: 1px solid #334155;
+    }
+
+    .mode-button.active {
+      background: #2563eb;
+      color: white;
+
+      border-color: #3b82f6;
+    }
+
+    /* ===== СООБЩЕНИЯ ===== */
+
     .messages {
       flex: 1;
+
       padding: 16px;
+
       overflow-y: auto;
+
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -95,55 +167,77 @@
 
     .message {
       max-width: 80%;
+
       padding: 12px 14px;
+
       border-radius: 14px;
+
       line-height: 1.4;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .user {
       align-self: flex-end;
+
       background: #2563eb;
       color: white;
+
       border-bottom-right-radius: 4px;
     }
 
     .bot {
       align-self: flex-start;
+
       background: #1f2937;
       color: #e5e7eb;
+
       border-bottom-left-radius: 4px;
     }
+
+    /* ===== ВВОД ===== */
 
     .input-area {
       display: flex;
       gap: 8px;
+
       padding: 12px;
-      border-top: 1px solid #334155;
+
       background: #020617;
+      border-top: 1px solid #334155;
     }
 
     textarea {
       flex: 1;
-      resize: none;
+
       min-height: 44px;
       max-height: 120px;
+
       padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #334155;
+
+      resize: none;
+
       background: #0f172a;
-      color: #e5e7eb;
+      color: white;
+
+      border: 1px solid #334155;
+      border-radius: 10px;
+
       font-size: 16px;
       outline: none;
     }
 
     button {
       padding: 0 18px;
+
       border: none;
       border-radius: 10px;
+
       background: #22c55e;
       color: #052e16;
+
       font-weight: bold;
+
       cursor: pointer;
     }
 
@@ -152,13 +246,19 @@
       cursor: not-allowed;
     }
 
+    /* ===== МОБИЛЬНЫЙ ===== */
+
     @media (max-width: 600px) {
-      body { align-items: stretch; }
+
+      body {
+        align-items: stretch;
+      }
 
       .chat {
         height: 100vh;
-        border-radius: 0;
+
         border: none;
+        border-radius: 0;
       }
 
       .login {
@@ -168,186 +268,886 @@
       .message {
         max-width: 90%;
       }
+
+      .mode-buttons {
+        gap: 5px;
+      }
+
+      .mode-button {
+        padding: 9px 5px;
+        font-size: 13px;
+      }
     }
+
   </style>
 </head>
 
 <body>
 
- <div id="loginBox" class="login">
+
+<!-- =========================
+     ВХОД
+========================= -->
+
+<div id="loginBox" class="login">
+
   <h1>Вход в чат</h1>
 
-  <input id="nameInput" type="text" placeholder="Введите имя" />
-  <input id="passwordInput" type="password" placeholder="Введите пароль" />
+  <input
+    id="nameInput"
+    type="text"
+    placeholder="Имя"
+    autocomplete="username"
+  >
 
-  <button onclick="login()">Войти</button>
+  <input
+    id="passwordInput"
+    type="password"
+    placeholder="Пароль"
+    autocomplete="current-password"
+  >
+
+  <button id="loginButton" onclick="login()">
+    Войти
+  </button>
+
   <div id="loginError" class="error"></div>
+
 </div>
 
-  <div id="chatBox" class="chat">
-    <div class="header">
-      <span>Мой чат-бот</span>
-      <button class="logout" onclick="logout()">Выйти</button>
-    </div>
 
-    <div id="messages" class="messages">
-      <div class="message bot">Привет. Напиши сообщение.</div>
-    </div>
+<!-- =========================
+     ЧАТ
+========================= -->
 
-    <div class="input-area">
-      <textarea id="input" placeholder="Введите сообщение..."></textarea>
-      <button id="sendBtn" onclick="sendMessage()">➤</button>
-    </div>
+<div id="chatBox" class="chat">
+
+  <div class="header">
+
+    <span id="chatTitle">
+      Мой чат-бот
+    </span>
+
+    <button class="logout" onclick="logout()">
+      Выйти
+    </button>
+
   </div>
 
-  <script>
-    const WEBHOOK_URL = "https://hook.eu1.make.com/v34lk33sto5j6dm82z7iu44gj2n67yhx";
-    
 
-    const loginBox = document.getElementById("loginBox");
-    const chatBox = document.getElementById("chatBox");
-    const passwordInput = document.getElementById("passwordInput");
-    const nameInput = document.getElementById("nameInput");
-    const loginError = document.getElementById("loginError");
+  <!-- РЕЖИМ -->
 
-    const input = document.getElementById("input");
-    const messages = document.getElementById("messages");
-    const sendBtn = document.getElementById("sendBtn");
+  <div class="mode-bar">
 
-    function showChat() {
-      loginBox.style.display = "none";
-      chatBox.style.display = "flex";
-      input.focus();
-    }
+    <div class="mode-status">
+      Режим:
+      <strong id="modeStatus">
+        Обычный чат
+      </strong>
+    </div>
 
-    function showLogin() {
-      loginBox.style.display = "block";
-      chatBox.style.display = "none";
-      passwordInput.focus();
-    }
 
-   async function login() {
-  const name = nameInput.value.trim();
-  const password = passwordInput.value.trim();
+    <div class="mode-buttons">
 
-  if (!name || !password) {
-    loginError.textContent = "Введите имя и пароль";
-    return;
+      <button
+        id="mode_normal"
+        class="mode-button"
+        onclick="setMode('normal_chat')"
+      >
+        💬 Обычный
+      </button>
+
+
+      <button
+        id="mode_dead"
+        class="mode-button"
+        onclick="setMode('dead_person')"
+      >
+        ⚰️ Труп
+      </button>
+
+
+      <button
+        id="mode_alive"
+        class="mode-button"
+        onclick="setMode('alive_person')"
+      >
+        🧍 Живой
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- СООБЩЕНИЯ -->
+
+  <div id="messages" class="messages">
+
+    <div class="message bot">
+      Привет. Напиши сообщение или выбери режим работы.
+    </div>
+
+  </div>
+
+
+  <!-- ПОЛЕ ВВОДА -->
+
+  <div class="input-area">
+
+    <textarea
+      id="input"
+      placeholder="Введите сообщение..."
+    ></textarea>
+
+    <button
+      id="sendBtn"
+      onclick="sendMessage()"
+    >
+      ➤
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+  /* ==========================================
+     НАСТРОЙКА
+  ========================================== */
+
+  const WEBHOOK_URL =
+    "СЮДА_ВСТАВЬ_WEBHOOK_MAKE";
+
+
+  /* ==========================================
+     ЭЛЕМЕНТЫ
+  ========================================== */
+
+  const loginBox =
+    document.getElementById("loginBox");
+
+  const chatBox =
+    document.getElementById("chatBox");
+
+  const nameInput =
+    document.getElementById("nameInput");
+
+  const passwordInput =
+    document.getElementById("passwordInput");
+
+  const loginButton =
+    document.getElementById("loginButton");
+
+  const loginError =
+    document.getElementById("loginError");
+
+  const input =
+    document.getElementById("input");
+
+  const messages =
+    document.getElementById("messages");
+
+  const sendBtn =
+    document.getElementById("sendBtn");
+
+
+  /* ==========================================
+     РЕЖИМ
+  ========================================== */
+
+  let currentMode =
+    sessionStorage.getItem("bot_mode")
+    || "normal_chat";
+
+
+  const modeNames = {
+
+    normal_chat: "Обычный чат",
+
+    dead_person: "Труп",
+
+    alive_person: "Живой"
+
+  };
+
+
+  function updateModeUI() {
+
+    document
+      .getElementById("modeStatus")
+      .textContent =
+        modeNames[currentMode];
+
+
+    document
+      .querySelectorAll(".mode-button")
+      .forEach(button => {
+
+        button.classList.remove("active");
+
+      });
+
+
+    const buttonIds = {
+
+      normal_chat: "mode_normal",
+
+      dead_person: "mode_dead",
+
+      alive_person: "mode_alive"
+
+    };
+
+
+    document
+      .getElementById(
+        buttonIds[currentMode]
+      )
+      .classList.add("active");
+
   }
 
-  loginError.textContent = "Проверка доступа...";
 
-  try {
-    const response = await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        type: "login",
-        name: name,
-        password: password
-      })
-    });
+  /* ==========================================
+     ВХОД
+  ========================================== */
 
-    const answer = await response.text();
+  async function login() {
 
-    if (!response.ok || answer !== "OK") {
-      loginError.textContent = "Доступ запрещён";
+    const name =
+      nameInput.value.trim();
+
+    const password =
+      passwordInput.value;
+
+
+    if (!name || !password) {
+
+      loginError.textContent =
+        "Введите имя и пароль";
+
+      return;
+
+    }
+
+
+    loginButton.disabled = true;
+
+    loginError.textContent =
+      "Проверка доступа...";
+
+
+    try {
+
+      const response =
+        await fetch(
+          WEBHOOK_URL,
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+              type: "login",
+
+              name: name,
+
+              password: password
+
+            })
+
+          }
+        );
+
+
+      const answer =
+        (await response.text()).trim();
+
+
+      if (
+        !response.ok ||
+        answer !== "OK"
+      ) {
+
+        loginError.textContent =
+          "Неверное имя или пароль";
+
+        loginButton.disabled = false;
+
+        return;
+
+      }
+
+
+      sessionStorage.setItem(
+        "bot_auth",
+        "yes"
+      );
+
+      sessionStorage.setItem(
+        "bot_name",
+        name
+      );
+
+      sessionStorage.setItem(
+        "bot_password",
+        password
+      );
+
+
+      currentMode =
+        "normal_chat";
+
+
+      sessionStorage.setItem(
+        "bot_mode",
+        currentMode
+      );
+
+
+      loginError.textContent = "";
+
+      showChat();
+
+    }
+
+    catch (error) {
+
+      loginError.textContent =
+        "Ошибка соединения с Make";
+
+    }
+
+
+    loginButton.disabled = false;
+
+  }
+
+
+  /* ==========================================
+     ВЫХОД
+  ========================================== */
+
+  function logout() {
+
+    sessionStorage.removeItem(
+      "bot_auth"
+    );
+
+    sessionStorage.removeItem(
+      "bot_name"
+    );
+
+    sessionStorage.removeItem(
+      "bot_password"
+    );
+
+    sessionStorage.removeItem(
+      "bot_mode"
+    );
+
+
+    currentMode =
+      "normal_chat";
+
+
+    nameInput.value = "";
+
+    passwordInput.value = "";
+
+
+    showLogin();
+
+  }
+
+
+  /* ==========================================
+     ПОКАЗАТЬ ЧАТ
+  ========================================== */
+
+  function showChat() {
+
+    loginBox.style.display =
+      "none";
+
+    chatBox.style.display =
+      "flex";
+
+
+    currentMode =
+      sessionStorage.getItem(
+        "bot_mode"
+      )
+      || "normal_chat";
+
+
+    updateModeUI();
+
+
+    const name =
+      sessionStorage.getItem(
+        "bot_name"
+      );
+
+
+    if (name) {
+
+      document
+        .getElementById(
+          "chatTitle"
+        )
+        .textContent =
+          "Чат — " + name;
+
+    }
+
+
+    input.focus();
+
+  }
+
+
+  /* ==========================================
+     ПОКАЗАТЬ ВХОД
+  ========================================== */
+
+  function showLogin() {
+
+    loginBox.style.display =
+      "block";
+
+    chatBox.style.display =
+      "none";
+
+
+    loginError.textContent = "";
+
+    nameInput.focus();
+
+  }
+
+
+  /* ==========================================
+     СМЕНА РЕЖИМА
+  ========================================== */
+
+  async function setMode(mode) {
+
+    if (!modeNames[mode]) {
       return;
     }
 
-    localStorage.setItem("bot_auth", "yes");
-    localStorage.setItem("bot_name", name);
-    localStorage.setItem("bot_password", password);
 
-    loginError.textContent = "";
-    showChat();
+    const oldMode =
+      currentMode;
 
-  } catch (error) {
-    loginError.textContent = "Ошибка соединения с Сервисом";
+
+    currentMode =
+      mode;
+
+
+    sessionStorage.setItem(
+      "bot_mode",
+      mode
+    );
+
+
+    updateModeUI();
+
+
+    const name =
+      sessionStorage.getItem(
+        "bot_name"
+      );
+
+    const password =
+      sessionStorage.getItem(
+        "bot_password"
+      );
+
+
+    try {
+
+      const response =
+        await fetch(
+          WEBHOOK_URL,
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+              type:
+                "callback_query",
+
+              callback:
+                mode,
+
+              mode:
+                mode,
+
+              name:
+                name,
+
+              password:
+                password
+
+            })
+
+          }
+        );
+
+
+      const answer =
+        (await response.text()).trim();
+
+
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
+
+        logout();
+
+        return;
+
+      }
+
+
+      if (!response.ok) {
+
+        currentMode =
+          oldMode;
+
+        sessionStorage.setItem(
+          "bot_mode",
+          oldMode
+        );
+
+        updateModeUI();
+
+        addMessage(
+          "Не удалось изменить режим.",
+          "bot"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        answer &&
+        answer !== "OK"
+      ) {
+
+        addMessage(
+          answer,
+          "bot"
+        );
+
+      }
+
+    }
+
+    catch (error) {
+
+      currentMode =
+        oldMode;
+
+      sessionStorage.setItem(
+        "bot_mode",
+        oldMode
+      );
+
+      updateModeUI();
+
+
+      addMessage(
+        "Ошибка соединения с Make.",
+        "bot"
+      );
+
+    }
+
   }
-}
 
-    function logout() {
-      localStorage.removeItem("bot_auth");
-      localStorage.removeItem("bot_password");
-      passwordInput.value = "";
-      showLogin();
+
+  /* ==========================================
+     ДОБАВИТЬ СООБЩЕНИЕ
+  ========================================== */
+
+  function addMessage(
+    text,
+    type
+  ) {
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+
+    div.className =
+      "message " + type;
+
+
+    div.textContent =
+      text;
+
+
+    messages.appendChild(
+      div
+    );
+
+
+    messages.scrollTop =
+      messages.scrollHeight;
+
+
+    return div;
+
+  }
+
+
+  /* ==========================================
+     ОТПРАВИТЬ СООБЩЕНИЕ
+  ========================================== */
+
+  async function sendMessage() {
+
+    const text =
+      input.value.trim();
+
+
+    if (!text) {
+      return;
     }
 
-    window.onload = function () {
-      if (localStorage.getItem("bot_auth") === "yes") {
-        showChat();
-      } else {
-        showLogin();
-      }
-    };
 
-    passwordInput.addEventListener("keydown", function (event) {
-      if (event.key === "Enter") {
-        login();
-      }
-    });
+    const name =
+      sessionStorage.getItem(
+        "bot_name"
+      );
 
-    input.addEventListener("keydown", function (event) {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        sendMessage();
-      }
-    });
+    const password =
+      sessionStorage.getItem(
+        "bot_password"
+      );
 
-    function addMessage(text, type) {
-      const div = document.createElement("div");
-      div.className = "message " + type;
-      div.textContent = text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-      return div;
+
+    addMessage(
+      text,
+      "user"
+    );
+
+
+    input.value = "";
+
+    sendBtn.disabled = true;
+
+
+    const loading =
+      addMessage(
+        "Печатает...",
+        "bot"
+      );
+
+
+    try {
+
+      const response =
+        await fetch(
+          WEBHOOK_URL,
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+              type:
+                "message",
+
+              name:
+                name,
+
+              password:
+                password,
+
+              mode:
+                currentMode,
+
+              message:
+                text
+
+            })
+
+          }
+        );
+
+
+      const answer =
+        await response.text();
+
+
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
+
+        loading.textContent =
+          "Доступ запрещён.";
+
+        setTimeout(
+          logout,
+          800
+        );
+
+        return;
+
+      }
+
+
+      if (!response.ok) {
+
+        loading.textContent =
+          "Ошибка Make: "
+          + response.status;
+
+        return;
+
+      }
+
+
+      loading.textContent =
+        answer.trim()
+        || "Пустой ответ от бота.";
+
     }
 
-    async function sendMessage() {
-      const text = input.value.trim();
-      const password = localStorage.getItem("bot_password");
+    catch (error) {
 
-      if (!text) return;
+      loading.textContent =
+        "Ошибка соединения с Make.";
 
-      addMessage(text, "user");
-      input.value = "";
-      sendBtn.disabled = true;
+    }
 
-      const loading = addMessage("Печатает...", "bot");
+    finally {
 
-      try {
-        const response = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-         body: JSON.stringify({
-          type: "message",
-          name: localStorage.getItem("bot_name"),
-          message: text,
-          password: password
-        })
-        });
+      sendBtn.disabled =
+        false;
 
-        const answer = await response.text();
-
-        if (response.status === 403 || answer === "Доступ запрещён") {
-          loading.textContent = "Доступ запрещён.";
-          logout();
-          return;
-        }
-
-        loading.textContent = answer || "Пустой ответ от бота.";
-      } catch (error) {
-        loading.textContent = "Ошибка соединения с Make.";
-      }
-
-      sendBtn.disabled = false;
       input.focus();
+
     }
-  </script>
+
+  }
+
+
+  /* ==========================================
+     ENTER
+  ========================================== */
+
+  passwordInput.addEventListener(
+    "keydown",
+    function(event) {
+
+      if (event.key === "Enter") {
+
+        login();
+
+      }
+
+    }
+  );
+
+
+  nameInput.addEventListener(
+    "keydown",
+    function(event) {
+
+      if (event.key === "Enter") {
+
+        passwordInput.focus();
+
+      }
+
+    }
+  );
+
+
+  input.addEventListener(
+    "keydown",
+    function(event) {
+
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
+
+        event.preventDefault();
+
+        sendMessage();
+
+      }
+
+    }
+  );
+
+
+  /* ==========================================
+     ЗАПУСК
+  ========================================== */
+
+  window.addEventListener(
+    "load",
+    function() {
+
+      if (
+        sessionStorage.getItem(
+          "bot_auth"
+        ) === "yes"
+      ) {
+
+        showChat();
+
+      }
+
+      else {
+
+        showLogin();
+
+      }
+
+    }
+  );
+
+</script>
+
 </body>
 </html>
