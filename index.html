@@ -996,24 +996,14 @@ sessionStorage.setItem(
 
             },
 
-            body: JSON.stringify({
-
-              type:
-                "message",
-
-              name:
-                name,
-
-              password:
-                password,
-
-              mode:
-                currentMode,
-
-              message:
-                text
-
-            })
+           body: JSON.stringify({
+            type: "message",
+            chat_id: sessionStorage.getItem("bot_chat_id"),
+            name: name,
+            password: password,
+            mode: currentMode,
+            message: text
+          })
 
           }
         );
