@@ -614,16 +614,16 @@ async function loadHistory() {
     }
 
     data.messages.forEach(item => {
-      const type =
-        item.role === "user"
-          ? "user"
-          : "bot";
+  const type =
+    item.data.role === "user"
+      ? "user"
+      : "bot";
 
-      addMessage(
-        item.message,
-        type
-      );
-    });
+  addMessage(
+    item.data.message,
+    type
+  );
+});
 
   } catch (error) {
     loading.textContent =
