@@ -571,23 +571,31 @@
         );
 
 
-      const answer =
-        (await response.text()).trim();
+const data = await response.json();
 
+if (
+  !response.ok ||
+  data.status !== "ok"
+) {
+  loginError.textContent =
+    "Неверное имя или пароль";
 
-      if (
-        !response.ok ||
-        answer !== "OK"
-      ) {
+  loginButton.disabled = false;
+  return;
+}
 
-        loginError.textContent =
-          "Неверное имя или пароль";
+sessionStorage.setItem(
+  "bot_chat_id",
+  data.chat_id
+);
 
-        loginButton.disabled = false;
+currentMode =
+  data.mode || "normal_chat";
 
-        return;
-
-      }
+sessionStorage.setItem(
+  "bot_mode",
+  currentMode
+);
 
 
       sessionStorage.setItem(
