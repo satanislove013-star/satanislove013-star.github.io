@@ -942,13 +942,18 @@ sessionStorage.setItem(
 
   async function sendMessage() {
 
-    const text =
-      input.value.trim();
+const text = input.value.trim();
 
+if (!text) {
+  return;
+}
 
-    if (!text) {
-      return;
-    }
+const taskId = crypto.randomUUID();
+
+sessionStorage.setItem(
+  "active_task_id",
+  taskId
+);
 
 
     const name =
