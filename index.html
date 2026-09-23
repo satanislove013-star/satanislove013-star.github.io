@@ -219,9 +219,9 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   <button class="logout" onclick="newChat()">＋ Новый чат</button>
   <button class="logout" onclick="logout()">Выйти</button>
 </div>
+    </div>
     <div id="chatListPanel" class="chat-list-panel" style="display:none;">
   <div id="chatList"></div>
-</div>
   </div>
   <div class="mode-bar">
     <div class="mode-status">Режим: <strong id="modeStatus">Обычный чат</strong></div>
@@ -580,21 +580,32 @@ async function loadChatList() {
       return;
     }
     const currentChatId = sessionStorage.getItem("bot_chat_id");
-    data.chats.forEach(chat => {
-      const button = document.createElement("button");
-      button.className = "chat-list-item";
-      if (chat.chat_id === currentChatId) button.classList.add("active");
-      const title = document.createElement("div");
-      title.textContent = modeNames[chat.mode] || chat.mode || "Чат";
-      const meta = document.createElement("div");
-      meta.className = "chat-list-meta";
-      const date = chat.last_activity ? new Date(chat.last_activity).toLocaleString("ru-RU") : "";
-      meta.textContent = (chat.active ? "Текущий · " : "") + date;
-      button.appendChild(title);
-      button.appendChild(meta);
-      button.onclick = () => openChat(chat.chat_id);
-      list.appendChild(button);
-    });
+    data.chats.forEach(item => {
+  const chat = item.data || item.value || item;
+  const chatId = chat.chat_id || item.chat_id || item.key;
+  const button = document.createElement("button");
+  button.className = "chat-list-item";
+  if (chatId === currentChatId) button.classList.add("active");
+
+  const title = document.createElement("div");
+  title.textContent = modeNames[chat.mode] || chat.mode || "Чат";
+
+  const meta = document.createElement("div");
+  meta.className = "chat-list-meta";
+  const date = chat.last_activity ? new Date(chat.last_activity).toLocaleString("ru-RU") : "";
+
+  if (!chatId) {
+    meta.textContent = "ОШИБКА: отсутствует chat_id";
+    button.disabled = true;
+  } else {
+    meta.textContent = (chat.active ? "Текущий · " : "") + date;
+    button.onclick = () => openChat(chatId);
+  }
+
+  button.appendChild(title);
+  button.appendChild(meta);
+  list.appendChild(button);
+});
   } catch (error) {
     list.textContent = "Ошибка соединения с Make.";
   }
