@@ -1,127 +1,90 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой чат-бот</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .login {
-      width: 100%;
-      max-width: 420px;
-      padding: 24px;
-      background: #111827;
-      border: 1px solid #334155;
-      border-radius: 16px;
-    }
-
-    .login h1 {
-      margin-top: 0;
-      font-size: 22px;
-    }
-
-    .login input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      background: #0f172a;
-      color: white;
-      font-size: 16px;
-    }
-
-    .login button {
-      width: 100%;
-      height: 46px;
-    }
-
-    .error {
-      min-height: 20px;
-      margin-top: 12px;
-      color: #f87171;
-    }
-
-    .chat {
-      width: 100%;
-      max-width: 720px;
-      height: 90vh;
-      display: none;
-      flex-direction: column;
-      background: #111827;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .header {
-      padding: 14px 16px;
-      background: #020617;
-      border-bottom: 1px solid #334155;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .logout {
-      padding: 8px 12px;
-      background: #334155;
-      color: white;
-      font-size: 14px;
-    }
-
-    .mode-bar {
-      padding: 10px 12px;
-      background: #111827;
-      border-bottom: 1px solid #334155;
-    }
-
-    .mode-status {
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    .mode-status strong {
-      color: white;
-    }
-
-    .mode-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .mode-button {
-      flex: 1;
-      padding: 10px;
-      background: #1e293b;
-      color: #cbd5e1;
-      border: 1px solid #334155;
-    }
-
-    .mode-button.active {
-      background: #2563eb;
-      color: white;
-      border-color: #3b82f6;
-    }
-    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мой чат-бот</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 16px;
+}
+.login h1 { margin-top: 0; font-size: 22px; }
+.login input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #0f172a;
+  color: white;
+  font-size: 16px;
+}
+.login button { width: 100%; height: 46px; }
+.error { min-height: 20px; margin-top: 12px; color: #f87171; }
+.chat {
+  width: 100%;
+  max-width: 720px;
+  height: 90vh;
+  display: none;
+  flex-direction: column;
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.header {
+  padding: 14px 16px;
+  background: #020617;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+.header-actions { display: flex; gap: 8px; }
+.logout {
+  padding: 8px 12px;
+  background: #334155;
+  color: white;
+  font-size: 14px;
+}
+.mode-bar {
+  padding: 10px 12px;
+  background: #111827;
+  border-bottom: 1px solid #334155;
+}
+.mode-status { margin-bottom: 8px; font-size: 14px; color: #94a3b8; }
+.mode-status strong { color: white; }
+.mode-buttons { display: flex; gap: 8px; }
+.mode-button {
+  flex: 1;
+  padding: 10px;
+  background: #1e293b;
+  color: #cbd5e1;
+  border: 1px solid #334155;
+}
+.mode-button.active {
+  background: #2563eb;
+  color: white;
+  border-color: #3b82f6;
+}
 .history-bar {
   padding: 8px 12px;
   background: #0f172a;
@@ -131,118 +94,87 @@
   align-items: center;
   gap: 14px;
 }
-
 .history-bar button {
   padding: 6px 14px;
   background: #334155;
   color: white;
 }
-
 .history-bar span {
   min-width: 110px;
   text-align: center;
   font-size: 14px;
 }
-    .messages {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .message {
-      max-width: 80%;
-      padding: 12px 14px;
-      border-radius: 14px;
-      line-height: 1.4;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .user {
-      align-self: flex-end;
-      background: #2563eb;
-      color: white;
-      border-bottom-right-radius: 4px;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background: #1f2937;
-      color: #e5e7eb;
-      border-bottom-left-radius: 4px;
-    }
-
-    .input-area {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      background: #020617;
-      border-top: 1px solid #334155;
-    }
-
-    textarea {
-      flex: 1;
-      min-height: 44px;
-      max-height: 120px;
-      padding: 12px;
-      resize: none;
-      background: #0f172a;
-      color: white;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    button {
-      padding: 0 18px;
-      border: none;
-      border-radius: 10px;
-      background: #22c55e;
-      color: #052e16;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        align-items: stretch;
-      }
-
-      .chat {
-        height: 100vh;
-        border: none;
-        border-radius: 0;
-      }
-
-      .login {
-        margin: auto 12px;
-      }
-
-      .message {
-        max-width: 90%;
-      }
-
-      .mode-buttons {
-        gap: 5px;
-      }
-
-      .mode-button {
-        padding: 9px 5px;
-        font-size: 13px;
-      }
-    }
-  </style>
+.messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.message {
+  max-width: 80%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.user {
+  align-self: flex-end;
+  background: #2563eb;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+.bot {
+  align-self: flex-start;
+  background: #1f2937;
+  color: #e5e7eb;
+  border-bottom-left-radius: 4px;
+}
+.input-area {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: #020617;
+  border-top: 1px solid #334155;
+}
+textarea {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  padding: 12px;
+  resize: none;
+  background: #0f172a;
+  color: white;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+}
+button {
+  padding: 0 18px;
+  border: none;
+  border-radius: 10px;
+  background: #22c55e;
+  color: #052e16;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+@media (max-width: 600px) {
+  body { align-items: stretch; }
+  .chat { height: 100vh; border: none; border-radius: 0; }
+  .login { margin: auto 12px; }
+  .message { max-width: 90%; }
+  .mode-buttons { gap: 5px; }
+  .mode-button { padding: 9px 5px; font-size: 13px; }
+  .header { gap: 8px; }
+  .header-actions { gap: 5px; }
+  .logout { padding: 7px 9px; font-size: 12px; }
+}
+</style>
 </head>
-
 <body>
 <div id="loginBox" class="login">
   <h1>Вход в чат</h1>
@@ -251,303 +183,270 @@
   <button id="loginButton" onclick="login()">Войти</button>
   <div id="loginError" class="error"></div>
 </div>
-
 <div id="chatBox" class="chat">
   <div class="header">
     <span id="chatTitle">Мой чат-бот</span>
-    <button class="logout" onclick="logout()">Выйти</button>
+    <div class="header-actions">
+      <button class="logout" onclick="newChat()">＋ Новый чат</button>
+      <button class="logout" onclick="logout()">Выйти</button>
+    </div>
   </div>
-
   <div class="mode-bar">
-    <div class="mode-status">
-      Режим: <strong id="modeStatus">Обычный чат</strong>
-    </div>
-
+    <div class="mode-status">Режим: <strong id="modeStatus">Обычный чат</strong></div>
     <div class="mode-buttons">
-      <button id="mode_normal" class="mode-button" onclick="setMode('normal_chat')">
-        💬 Обычный
-      </button>
-      <button id="mode_dead" class="mode-button" onclick="setMode('dead_person')">
-        ⚰️ Труп
-      </button>
-      <button id="mode_alive" class="mode-button" onclick="setMode('alive_person')">
-        🧍 Живой
-      </button>
+      <button id="mode_normal" class="mode-button" onclick="setMode('normal_chat')">💬 Обычный</button>
+      <button id="mode_dead" class="mode-button" onclick="setMode('dead_person')">⚰️ Труп</button>
+      <button id="mode_alive" class="mode-button" onclick="setMode('alive_person')">🧍 Живой</button>
     </div>
   </div>
-<div class="history-bar">
-  <button onclick="changeHistoryDay(-1)">←</button>
-  <span id="historyDate"></span>
-  <button id="historyNext" onclick="changeHistoryDay(1)">→</button>
-</div>
+  <div class="history-bar">
+    <button onclick="changeHistoryDay(-1)">←</button>
+    <span id="historyDate"></span>
+    <button id="historyNext" onclick="changeHistoryDay(1)">→</button>
+  </div>
   <div id="messages" class="messages"></div>
-
   <div class="input-area">
     <textarea id="input" placeholder="Введите сообщение..."></textarea>
     <button id="sendBtn" onclick="sendMessage()">➤</button>
   </div>
 </div>
-
 <script>
-  const WEBHOOK_URL = "https://hook.eu1.make.com/v34lk33sto5j6dm82z7iu44gj2n67yhx";
+const WEBHOOK_URL = "https://hook.eu1.make.com/v34lk33sto5j6dm82z7iu44gj2n67yhx";
+const loginBox = document.getElementById("loginBox");
+const chatBox = document.getElementById("chatBox");
+const nameInput = document.getElementById("nameInput");
+const passwordInput = document.getElementById("passwordInput");
+const loginButton = document.getElementById("loginButton");
+const loginError = document.getElementById("loginError");
+const input = document.getElementById("input");
+const messages = document.getElementById("messages");
+const sendBtn = document.getElementById("sendBtn");
+let currentMode = sessionStorage.getItem("bot_mode") || "normal_chat";
+let historyDate = new Date();
 
-  const loginBox = document.getElementById("loginBox");
-  const chatBox = document.getElementById("chatBox");
-  const nameInput = document.getElementById("nameInput");
-  const passwordInput = document.getElementById("passwordInput");
-  const loginButton = document.getElementById("loginButton");
-  const loginError = document.getElementById("loginError");
-  const input = document.getElementById("input");
-  const messages = document.getElementById("messages");
-  const sendBtn = document.getElementById("sendBtn");
+const modeNames = {
+  normal_chat: "Обычный чат",
+  dead_person: "Труп",
+  alive_person: "Живой"
+};
 
-  let currentMode = sessionStorage.getItem("bot_mode") || "normal_chat";
-  let historyDate = new Date();
-
-  const modeNames = {
-    normal_chat: "Обычный чат",
-    dead_person: "Труп",
-    alive_person: "Живой"
+function updateModeUI() {
+  document.getElementById("modeStatus").textContent = modeNames[currentMode];
+  document.querySelectorAll(".mode-button").forEach(button => button.classList.remove("active"));
+  const buttonIds = {
+    normal_chat: "mode_normal",
+    dead_person: "mode_dead",
+    alive_person: "mode_alive"
   };
-
-  function updateModeUI() {
-    document.getElementById("modeStatus").textContent = modeNames[currentMode];
-
-    document.querySelectorAll(".mode-button").forEach(button => {
-      button.classList.remove("active");
-    });
-
-    const buttonIds = {
-      normal_chat: "mode_normal",
-      dead_person: "mode_dead",
-      alive_person: "mode_alive"
-    };
-
-    document.getElementById(buttonIds[currentMode]).classList.add("active");
-  }
-
-  async function login() {
-    const name = nameInput.value.trim();
-    const password = passwordInput.value;
-
-    if (!name || !password) {
-      loginError.textContent = "Введите имя и пароль";
-      return;
-    }
-
-    loginButton.disabled = true;
-    loginError.textContent = "Проверка доступа...";
-
-    try {
-      const response = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          type: "login",
-          name: name,
-          password: password
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || data.status !== "ok") {
-        loginError.textContent = "Неверное имя или пароль";
-        return;
-      }
-
-      sessionStorage.setItem("bot_auth", "yes");
-      sessionStorage.setItem("bot_name", name);
-      sessionStorage.setItem("bot_password", password);
-      sessionStorage.setItem("bot_chat_id", data.chat_id);
-
-      currentMode = data.mode || "normal_chat";
-      sessionStorage.setItem("bot_mode", currentMode);
-
-      loginError.textContent = "";
-      showChat();
-    } catch (error) {
-      loginError.textContent = "Ошибка соединения с Make";
-    } finally {
-      loginButton.disabled = false;
-    }
-  }
-
-  function logout() {
-    sessionStorage.removeItem("bot_auth");
-    sessionStorage.removeItem("bot_name");
-    sessionStorage.removeItem("bot_password");
-    sessionStorage.removeItem("bot_chat_id");
-    sessionStorage.removeItem("bot_mode");
-
-    currentMode = "normal_chat";
-    nameInput.value = "";
-    passwordInput.value = "";
-    showLogin();
-  }
-
-  function showChat() {
-    loginBox.style.display = "none";
-    chatBox.style.display = "flex";
-
-    currentMode = sessionStorage.getItem("bot_mode") || "normal_chat";
-    updateModeUI();
-
-    const name = sessionStorage.getItem("bot_name");
-
-    if (name) {
-      document.getElementById("chatTitle").textContent = "Чат — " + name;
-    }
-historyDate = new Date();
-updateHistoryDateUI();
-loadHistory();
-    input.focus();
-  }
-
-  function showLogin() {
-    loginBox.style.display = "block";
-    chatBox.style.display = "none";
-    loginError.textContent = "";
-    nameInput.focus();
-  }
-
-  async function setMode(mode) {
-    if (!modeNames[mode]) return;
-
-    const oldMode = currentMode;
-    currentMode = mode;
-    sessionStorage.setItem("bot_mode", mode);
-    updateModeUI();
-
-    try {
-      const response = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          type: "callback_query",
-          callback: mode,
-          mode: mode,
-          chat_id: sessionStorage.getItem("bot_chat_id"),
-          name: sessionStorage.getItem("bot_name"),
-          password: sessionStorage.getItem("bot_password")
-        })
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        logout();
-        return;
-      }
-
-      if (!response.ok) {
-        currentMode = oldMode;
-        sessionStorage.setItem("bot_mode", oldMode);
-        updateModeUI();
-        addMessage("Не удалось изменить режим.", "bot");
-        return;
-      }
-
-      const answer = (await response.text()).trim();
-
-      if (answer && answer !== "OK") {
-        try {
-          const data = JSON.parse(answer);
-
-          if (data.result) {
-            addMessage(data.result, "bot");
-          }
-        } catch {
-          addMessage(answer, "bot");
-        }
-      }
-    } catch (error) {
-      currentMode = oldMode;
-      sessionStorage.setItem("bot_mode", oldMode);
-      updateModeUI();
-      addMessage("Ошибка соединения с Make.", "bot");
-    }
-  }
-
-  function addMessage(text, type) {
-    const div = document.createElement("div");
-    div.className = "message " + type;
-    div.textContent = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-    return div;
-  }
-
-  async function checkResult(taskId, loading, startTime) {
-    if (Date.now() - startTime > 10 * 60 * 1000) {
-      loading.textContent = "Превышено время ожидания ответа.";
-      return;
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 5000));
-
-    try {
-      const response = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          type: "check_result",
-          task_id: taskId,
-          chat_id: sessionStorage.getItem("bot_chat_id"),
-          name: sessionStorage.getItem("bot_name"),
-          password: sessionStorage.getItem("bot_password")
-        })
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        loading.textContent = "Доступ запрещён.";
-        setTimeout(logout, 800);
-        return;
-      }
-
-      if (!response.ok) {
-        loading.textContent = "Ошибка проверки результата: " + response.status;
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.status === "done") {
-        loading.textContent = data.result || "Получен пустой ответ.";
-        return;
-      }
-
-      if (data.status === "error") {
-        loading.textContent = data.result || "Ошибка обработки запроса.";
-        return;
-      }
-
-      if (data.status === "processing") {
-        checkResult(taskId, loading, startTime);
-        return;
-      }
-
-      loading.textContent = "Неизвестный статус ответа.";
-    } catch (error) {
-  loading.textContent = "Обрабатываю запрос...";
-
-  return checkResult(
-    taskId,
-    loading,
-    startTime
-  );
+  const activeButton = document.getElementById(buttonIds[currentMode]);
+  if (activeButton) activeButton.classList.add("active");
 }
+
+async function login() {
+  const name = nameInput.value.trim();
+  const password = passwordInput.value;
+  if (!name || !password) {
+    loginError.textContent = "Введите имя и пароль";
+    return;
   }
+  loginButton.disabled = true;
+  loginError.textContent = "Проверка доступа...";
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "login",
+        name: name,
+        password: password
+      })
+    });
+    const data = await response.json();
+    if (!response.ok || data.status !== "ok") {
+      loginError.textContent = "Неверное имя или пароль";
+      return;
+    }
+    sessionStorage.setItem("bot_auth", "yes");
+    sessionStorage.setItem("bot_name", name);
+    sessionStorage.setItem("bot_password", password);
+    sessionStorage.setItem("bot_chat_id", data.chat_id);
+    currentMode = data.mode || "normal_chat";
+    sessionStorage.setItem("bot_mode", currentMode);
+    loginError.textContent = "";
+    showChat();
+  } catch (error) {
+    loginError.textContent = "Ошибка соединения с Make";
+  } finally {
+    loginButton.disabled = false;
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem("bot_auth");
+  sessionStorage.removeItem("bot_name");
+  sessionStorage.removeItem("bot_password");
+  sessionStorage.removeItem("bot_chat_id");
+  sessionStorage.removeItem("bot_mode");
+  currentMode = "normal_chat";
+  nameInput.value = "";
+  passwordInput.value = "";
+  messages.innerHTML = "";
+  showLogin();
+}
+
+function showChat() {
+  loginBox.style.display = "none";
+  chatBox.style.display = "flex";
+  currentMode = sessionStorage.getItem("bot_mode") || "normal_chat";
+  updateModeUI();
+  const name = sessionStorage.getItem("bot_name");
+  if (name) document.getElementById("chatTitle").textContent = "Чат — " + name;
+  historyDate = new Date();
+  updateHistoryDateUI();
+  loadHistory();
+  input.focus();
+}
+
+function showLogin() {
+  loginBox.style.display = "block";
+  chatBox.style.display = "none";
+  loginError.textContent = "";
+  nameInput.focus();
+}
+
+async function setMode(mode) {
+  if (!modeNames[mode]) return;
+  if (mode === currentMode) return;
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "callback_query",
+        callback: mode,
+        mode: mode,
+        chat_id: sessionStorage.getItem("bot_chat_id"),
+        name: sessionStorage.getItem("bot_name"),
+        password: sessionStorage.getItem("bot_password")
+      })
+    });
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+    const data = await response.json();
+    if (!response.ok || data.status !== "ok" || !data.chat_id) {
+      addMessage("Не удалось изменить режим.", "bot");
+      return;
+    }
+    sessionStorage.setItem("bot_chat_id", data.chat_id);
+    currentMode = data.mode || mode;
+    sessionStorage.setItem("bot_mode", currentMode);
+    updateModeUI();
+    messages.innerHTML = "";
+    historyDate = new Date();
+    updateHistoryDateUI();
+    input.focus();
+  } catch (error) {
+    addMessage("Ошибка соединения с Make.", "bot");
+  }
+}
+
+async function newChat() {
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "callback_query",
+        callback: "new_chat",
+        mode: currentMode,
+        chat_id: sessionStorage.getItem("bot_chat_id"),
+        name: sessionStorage.getItem("bot_name"),
+        password: sessionStorage.getItem("bot_password")
+      })
+    });
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+    const data = await response.json();
+    if (!response.ok || data.status !== "ok" || !data.chat_id) {
+      addMessage("Не удалось создать новый чат.", "bot");
+      return;
+    }
+    sessionStorage.setItem("bot_chat_id", data.chat_id);
+    currentMode = data.mode || currentMode;
+    sessionStorage.setItem("bot_mode", currentMode);
+    updateModeUI();
+    messages.innerHTML = "";
+    historyDate = new Date();
+    updateHistoryDateUI();
+    input.focus();
+  } catch (error) {
+    addMessage("Ошибка соединения с Make.", "bot");
+  }
+}
+
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = "message " + type;
+  div.textContent = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  return div;
+}
+
+async function checkResult(taskId, loading, startTime, chatId) {
+  if (Date.now() - startTime > 10 * 60 * 1000) {
+    loading.textContent = "Превышено время ожидания ответа.";
+    return;
+  }
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "check_result",
+        task_id: taskId,
+        chat_id: chatId,
+        name: sessionStorage.getItem("bot_name"),
+        password: sessionStorage.getItem("bot_password")
+      })
+    });
+    if (response.status === 401 || response.status === 403) {
+      loading.textContent = "Доступ запрещён.";
+      setTimeout(logout, 800);
+      return;
+    }
+    if (!response.ok) {
+      loading.textContent = "Ошибка проверки результата: " + response.status;
+      return;
+    }
+    const data = await response.json();
+    if (data.status === "done") {
+      loading.textContent = data.result || "Получен пустой ответ.";
+      return;
+    }
+    if (data.status === "error") {
+      loading.textContent = data.result || "Ошибка обработки запроса.";
+      return;
+    }
+    if (data.status === "processing") {
+      return checkResult(taskId, loading, startTime, chatId);
+    }
+    loading.textContent = "Неизвестный статус ответа.";
+  } catch (error) {
+    loading.textContent = "Обрабатываю запрос...";
+    return checkResult(taskId, loading, startTime, chatId);
+  }
+}
 
 function formatDateForMake(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-
   return `${year}-${month}-${day}`;
 }
 
@@ -556,14 +455,10 @@ function formatDateForScreen(date) {
 }
 
 function updateHistoryDateUI() {
-  document.getElementById("historyDate").textContent =
-    formatDateForScreen(historyDate);
-
+  document.getElementById("historyDate").textContent = formatDateForScreen(historyDate);
   const today = formatDateForMake(new Date());
   const selected = formatDateForMake(historyDate);
-
-  document.getElementById("historyNext").disabled =
-    selected >= today;
+  document.getElementById("historyNext").disabled = selected >= today;
 }
 
 async function changeHistoryDay(days) {
@@ -574,177 +469,119 @@ async function changeHistoryDay(days) {
 
 async function loadHistory() {
   messages.innerHTML = "";
-
-  const loading = addMessage(
-    "Загрузка истории...",
-    "bot"
-  );
-
+  const loading = addMessage("Загрузка истории...", "bot");
+  const requestedChatId = sessionStorage.getItem("bot_chat_id");
   try {
     const response = await fetch(WEBHOOK_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         type: "get_history",
-        chat_id: sessionStorage.getItem("bot_chat_id"),
+        chat_id: requestedChatId,
         date: formatDateForMake(historyDate),
         name: sessionStorage.getItem("bot_name"),
         password: sessionStorage.getItem("bot_password")
       })
     });
-
     if (!response.ok) {
-      loading.textContent =
-        "Ошибка загрузки истории.";
+      loading.textContent = "Ошибка загрузки истории.";
       return;
     }
-
     const data = await response.json();
-
     messages.innerHTML = "";
-
-    if (
-      data.status !== "ok" ||
-      !Array.isArray(data.messages) ||
-      data.messages.length === 0
-    ) {
-      addMessage(
-        "За этот день сообщений нет.",
-        "bot"
-      );
+    if (data.status !== "ok" || !Array.isArray(data.messages) || data.messages.length === 0) {
+      addMessage("За этот день сообщений нет.", "bot");
       return;
     }
-
-data.messages.forEach(item => {
-  const record = item.data || item.record || item.Record || item;
-  const type = record.role === "user" ? "user" : "bot";
-
-  if (
-    record.role === "assistant" &&
-    record.status === "processing"
-  ) {
-    const loading = addMessage(
-      "Обрабатываю запрос...",
-      "bot"
-    );
-
-    const startTime =
-      record.timestamp
-        ? new Date(record.timestamp).getTime()
-        : Date.now();
-
-    checkResult(
-      record.task_id,
-      loading,
-      startTime
-    );
-
-    return;
-  }
-
-  addMessage(
-    record.message || "[ПУСТО]",
-    type
-  );
-});
-
+    data.messages.forEach(item => {
+      const record = item.data || item.record || item.Record || item;
+      const type = record.role === "user" ? "user" : "bot";
+      if (record.role === "assistant" && record.status === "processing") {
+        const loading = addMessage("Обрабатываю запрос...", "bot");
+        const startTime = record.timestamp ? new Date(record.timestamp).getTime() : Date.now();
+        const resultChatId = record.chat_id || requestedChatId;
+        checkResult(record.task_id, loading, startTime, resultChatId);
+        return;
+      }
+      addMessage(record.message || "[ПУСТО]", type);
+    });
   } catch (error) {
-    loading.textContent =
-      "Ошибка соединения с Make.";
+    loading.textContent = "Ошибка соединения с Make.";
   }
 }
 
-  
-  async function sendMessage() {
-    const text = input.value.trim();
-
-    if (!text) return;
-
-    const taskId = crypto.randomUUID();
-    const name = sessionStorage.getItem("bot_name");
-    const password = sessionStorage.getItem("bot_password");
-    const chatId = sessionStorage.getItem("bot_chat_id");
-
-    addMessage(text, "user");
-    input.value = "";
-    sendBtn.disabled = true;
-
-    const loading = addMessage("Отправляю...", "bot");
-
-    try {
-      const response = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          type: "message",
-          chat_id: chatId,
-          task_id: taskId,
-          name: name,
-          password: password,
-          mode: currentMode,
-          message: text
-        })
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        loading.textContent = "Доступ запрещён.";
-        setTimeout(logout, 800);
-        return;
-      }
-
-      if (!response.ok) {
-        loading.textContent = "Ошибка Make: " + response.status;
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.status === "processing") {
-        loading.textContent = "Обрабатываю запрос...";
-        checkResult(taskId, loading, Date.now());
-        return;
-      }
-
-      if (data.status === "done") {
-        loading.textContent = data.result || "Получен пустой ответ.";
-        return;
-      }
-
-      loading.textContent = "Ошибка получения ответа.";
-    } catch (error) {
-      loading.textContent = "Ошибка соединения с Make.";
-    } finally {
-      sendBtn.disabled = false;
-      input.focus();
+async function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
+  const taskId = crypto.randomUUID();
+  const name = sessionStorage.getItem("bot_name");
+  const password = sessionStorage.getItem("bot_password");
+  const chatId = sessionStorage.getItem("bot_chat_id");
+  addMessage(text, "user");
+  input.value = "";
+  sendBtn.disabled = true;
+  const loading = addMessage("Отправляю...", "bot");
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "message",
+        chat_id: chatId,
+        task_id: taskId,
+        name: name,
+        password: password,
+        mode: currentMode,
+        message: text
+      })
+    });
+    if (response.status === 401 || response.status === 403) {
+      loading.textContent = "Доступ запрещён.";
+      setTimeout(logout, 800);
+      return;
     }
+    if (!response.ok) {
+      loading.textContent = "Ошибка Make: " + response.status;
+      return;
+    }
+    const data = await response.json();
+    if (data.status === "processing") {
+      loading.textContent = "Обрабатываю запрос...";
+      checkResult(taskId, loading, Date.now(), chatId);
+      return;
+    }
+    if (data.status === "done") {
+      loading.textContent = data.result || "Получен пустой ответ.";
+      return;
+    }
+    loading.textContent = "Ошибка получения ответа.";
+  } catch (error) {
+    loading.textContent = "Ошибка соединения с Make.";
+  } finally {
+    sendBtn.disabled = false;
+    input.focus();
   }
+}
 
-  passwordInput.addEventListener("keydown", event => {
-    if (event.key === "Enter") login();
-  });
+passwordInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") login();
+});
 
-  nameInput.addEventListener("keydown", event => {
-    if (event.key === "Enter") passwordInput.focus();
-  });
+nameInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") passwordInput.focus();
+});
 
-  input.addEventListener("keydown", event => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      sendMessage();
-    }
-  });
+input.addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
+});
 
-  window.addEventListener("load", () => {
-    if (sessionStorage.getItem("bot_auth") === "yes") {
-      showChat();
-    } else {
-      showLogin();
-    }
-  });
+window.addEventListener("load", () => {
+  if (sessionStorage.getItem("bot_auth") === "yes") showChat();
+  else showLogin();
+});
 </script>
 </body>
 </html>
