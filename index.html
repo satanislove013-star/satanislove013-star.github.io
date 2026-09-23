@@ -611,14 +611,35 @@ async function loadHistory() {
       return;
     }
 
-    data.messages.forEach(item => {
-  const type =
-    item.data.role === "user"
-      ? "user"
-      : "bot";
+data.messages.forEach(item => {
+  const record = item.data || item.record || item.Record || item;
+  const type = record.role === "user" ? "user" : "bot";
+
+  if (
+    record.role === "assistant" &&
+    record.status === "processing"
+  ) {
+    const loading = addMessage(
+      "Обрабатываю запрос...",
+      "bot"
+    );
+
+    const startTime =
+      record.timestamp
+        ? new Date(record.timestamp).getTime()
+        : Date.now();
+
+    checkResult(
+      record.task_id,
+      loading,
+      startTime
+    );
+
+    return;
+  }
 
   addMessage(
-    item.data.message,
+    record.message || "[ПУСТО]",
     type
   );
 });
