@@ -104,6 +104,34 @@ body {
   text-align: center;
   font-size: 14px;
 }
+.chat-list-panel {
+  max-height: 260px;
+  overflow-y: auto;
+  background: #0f172a;
+  border-bottom: 1px solid #334155;
+  padding: 8px;
+}
+.chat-list-item {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: #1e293b;
+  color: white;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+.chat-list-item.active {
+  border-color: #22c55e;
+  background: #163624;
+}
+.chat-list-meta {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+  
 .messages {
   flex: 1;
   padding: 16px;
@@ -186,10 +214,14 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 <div id="chatBox" class="chat">
   <div class="header">
     <span id="chatTitle">Мой чат-бот</span>
-    <div class="header-actions">
-      <button class="logout" onclick="newChat()">＋ Новый чат</button>
-      <button class="logout" onclick="logout()">Выйти</button>
-    </div>
+ <div class="header-actions">
+  <button class="logout" onclick="toggleChatList()">☰ Чаты</button>
+  <button class="logout" onclick="newChat()">＋ Новый чат</button>
+  <button class="logout" onclick="logout()">Выйти</button>
+</div>
+    <div id="chatListPanel" class="chat-list-panel" style="display:none;">
+  <div id="chatList"></div>
+</div>
   </div>
   <div class="mode-bar">
     <div class="mode-status">Режим: <strong id="modeStatus">Обычный чат</strong></div>
@@ -507,6 +539,106 @@ async function loadHistory() {
     });
   } catch (error) {
     loading.textContent = "Ошибка соединения с Make.";
+  }
+}
+
+  async function toggleChatList() {
+  const panel = document.getElementById("chatListPanel");
+  if (panel.style.display === "block") {
+    panel.style.display = "none";
+    return;
+  }
+  panel.style.display = "block";
+  await loadChatList();
+}
+
+async function loadChatList() {
+  const list = document.getElementById("chatList");
+  list.textContent = "Загрузка...";
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "list_chats",
+        name: sessionStorage.getItem("bot_name"),
+        password: sessionStorage.getItem("bot_password")
+      })
+    });
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+    const data = await response.json();
+    list.innerHTML = "";
+    if (!response.ok || data.status !== "ok" || !Array.isArray(data.chats)) {
+      list.textContent = "Не удалось загрузить чаты.";
+      return;
+    }
+    if (data.chats.length === 0) {
+      list.textContent = "Чатов пока нет.";
+      return;
+    }
+    const currentChatId = sessionStorage.getItem("bot_chat_id");
+    data.chats.forEach(chat => {
+      const button = document.createElement("button");
+      button.className = "chat-list-item";
+      if (chat.chat_id === currentChatId) button.classList.add("active");
+      const title = document.createElement("div");
+      title.textContent = modeNames[chat.mode] || chat.mode || "Чат";
+      const meta = document.createElement("div");
+      meta.className = "chat-list-meta";
+      const date = chat.last_activity ? new Date(chat.last_activity).toLocaleString("ru-RU") : "";
+      meta.textContent = (chat.active ? "Текущий · " : "") + date;
+      button.appendChild(title);
+      button.appendChild(meta);
+      button.onclick = () => openChat(chat.chat_id);
+      list.appendChild(button);
+    });
+  } catch (error) {
+    list.textContent = "Ошибка соединения с Make.";
+  }
+}
+
+async function openChat(chatId) {
+  const currentChatId = sessionStorage.getItem("bot_chat_id");
+  if (!chatId) return;
+  if (chatId === currentChatId) {
+    document.getElementById("chatListPanel").style.display = "none";
+    return;
+  }
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "open_chat",
+        current_chat_id: currentChatId,
+        chat_id: chatId,
+        name: sessionStorage.getItem("bot_name"),
+        password: sessionStorage.getItem("bot_password")
+      })
+    });
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      return;
+    }
+    const data = await response.json();
+    if (!response.ok || data.status !== "ok" || !data.chat_id) {
+      addMessage("Не удалось открыть чат.", "bot");
+      return;
+    }
+    sessionStorage.setItem("bot_chat_id", data.chat_id);
+    currentMode = data.mode || "normal_chat";
+    sessionStorage.setItem("bot_mode", currentMode);
+    updateModeUI();
+    document.getElementById("chatListPanel").style.display = "none";
+    historyDate = new Date();
+    updateHistoryDateUI();
+    await loadHistory();
+    input.focus();
+  } catch (error) {
+    addMessage("Ошибка соединения с Make.", "bot");
   }
 }
 
