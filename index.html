@@ -533,8 +533,14 @@ loadHistory();
 
       loading.textContent = "Неизвестный статус ответа.";
     } catch (error) {
-      loading.textContent = "Ошибка соединения с Make.";
-    }
+  loading.textContent = "Обрабатываю запрос...";
+
+  return checkResult(
+    taskId,
+    loading,
+    startTime
+  );
+}
   }
 
 function formatDateForMake(date) {
