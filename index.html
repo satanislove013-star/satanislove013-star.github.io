@@ -599,7 +599,7 @@ async function loadChatList() {
     button.disabled = true;
   } else {
     meta.textContent = (chat.active ? "Текущий · " : "") + date;
-    button.onclick = () => openChat(chatId);
+    button.onclick = () => openChat(chatId, chat.last_activity);
   }
 
   button.appendChild(title);
@@ -611,7 +611,7 @@ async function loadChatList() {
   }
 }
 
-async function openChat(chatId) {
+async function openChat(chatId, lastActivity) {
   const currentChatId = sessionStorage.getItem("bot_chat_id");
   if (!chatId) return;
   if (chatId === currentChatId) {
@@ -644,7 +644,7 @@ async function openChat(chatId) {
     sessionStorage.setItem("bot_mode", currentMode);
     updateModeUI();
     document.getElementById("chatListPanel").style.display = "none";
-    historyDate = new Date();
+    historyDate = lastActivity ? new Date(lastActivity) : new Date();
     updateHistoryDateUI();
     await loadHistory();
     input.focus();
